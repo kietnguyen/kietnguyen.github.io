@@ -30,6 +30,8 @@
 
 [Projects](pages/projects.md)
 
+[How-tos](pages/how-tos.md)
+
 <!-- A more complex navigation example: ----------------------------------------
 
 [Menu Item 1]()

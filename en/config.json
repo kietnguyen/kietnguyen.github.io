@@ -1,7 +1,7 @@
 {
   "additionalFooterText": "&copy; by Kiet Nguyen - ",
-  "anchorCharacter": "#",
+  "anchorCharacter": "&#x2693;",
   "lineBreaks": "gfm",
-  "title": "Kiet Nguyen",
+  "title": "Kiet Nguyen's Wiki",
   "useSideMenu": true
 }

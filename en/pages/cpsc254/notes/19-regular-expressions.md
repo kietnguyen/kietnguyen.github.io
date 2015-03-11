@@ -20,15 +20,32 @@
 
 * Options and arguments: `grep [options] regex [file...]`
 
-      -i  --ignore-case           Ignore case
-      -v  --invert-match          Invert match
-      -c  --count                 Print the number of matches
-      -l  --files-with-matches    Print the name of each file that contains a match
-      -L  --files-without-match   Print the names of files that do not contain matches
-      -n  --line-number           Prefix each matching line with the number of the line within the file
-      -h  --no-filename           Suppress the output of filenames for multi-file searches
+  ```
+  # Matching control
+  -i  --ignore-case
+          Ignore  case  distinctions  in  both  the  PATTERN and the input files.
 
-  Examples
+  -v  --invert-match
+          Invert the sense of matching, to select non-matching lines.
+
+  # Output control
+  -c  --count
+          Print a count of matching  lines for  each  input  file
+
+  -l  --files-with-matches
+          Print the name of each file that contains a match
+
+  -L  --files-without-match   
+          Print the names of files that do not contain matches
+
+  -n  --line-number           
+          Prefix each matching line with the number of the line within the file
+
+  -h  --no-filename           
+          Suppress the output of filenames for multi-file searches
+  ```
+
+  **Examples**
 
   ```
   # SETUP
@@ -69,7 +86,7 @@
 
 #### Any Character
 
-To match any character: `.`
+* To match any character: `.`
 
   ```
   # Match any line that has 4+ characters and matches the regex
@@ -93,23 +110,25 @@ To match any character: `.`
   grep -hn '^$' ls*
   ```
 
-  _A crossword puzzle helper_
-  For example: What's a five-letter word whose third leter is 'j' and last letter is 'r' that means...?
+  **_A crossword puzzle helper_**
+  What's a five-letter word whose 3rd leter is _j_ and last letter is _r_ that means...?
 
   ```
   grep -i '^..j.r$' /usr/share/dict/words
   ```
 
-#### Bracket Expressions
+### Bracket Expressions and Character Classes
 
-To match a single character from a set of characters: `[[character...]]`
+* To match a single character from a set of characters: `[[character...]]`
 
+  ```
   # Match any line contains the string "bzip" or "gzip"
   grep -h '[bg]zip' ls*
   ```
 
 #### Negation
-To match a single character NOT from a set of characters: `[^[character...]]`
+
+* To match a single character NOT from a set of characters: `[^[character...]]`
 
   ```
   # Match any line contains the string "zip" NOT preceded by "b" or "g"
@@ -118,106 +137,135 @@ To match a single character NOT from a set of characters: `[^[character...]]`
 
 #### Traditional character ranges
 
+* `[A-Z]`, `[a-z]`, `[0-9]`, or any combination
+
   ```
   # Match any line contains strings beginning with an uppercase character
   grep -h '^[A-Z]' ls*
   ```
 
-Notice the difference meaning between above and below
-
-  ```
-  # Match any line contains strings contains - (dash), A, Z
-  grep -h '[-AZ]' ls*
-  ```
-
 #### POSIX Character Classes
 
-POSIX was a IEEE standard to unify all the various UNIX forks and UNIX-like systems in 1988.
+* POSIX was a IEEE standard to unify all the various UNIX forks and UNIX-like systems in mid 1980s.
 
   ```
-  ls /usr/sbin/[A-Z]*
-  ```
-
-  ```
+  # SETUP
+  cd posix_example && cd $_
+  touch {A..Z} {a..z} {0..9}
+  
   # Check for language
   echo $LANG
   # If it's en_US.UTF-8, system uses dictionary order aAbB..zZ;
   #   if it's POSIX, system uses collation order AB..Zab..Z.
   #   Change LANG to desired setting: export LANG=POSIX
+  
+  # With LANG=en_US.UTF-8
+  ls [A-D]
+  ls [A-d]
+
+  # Observe when LANG=POSIX
+  LANG=POSIX
+  ls [A-D]
+  ls [a-d]
+  ```
+
+See _POSIX Character Classes_ in Table 19-2
+
+### Basic vs. Extended Regular Expressions
+
+POSIX splits into 2 kinds of regular expressions:
+
+1. Basic regular expressions (BRE)
+  * Metacharacters: `^ $ . [ ] *`
+  * Extra ERE metachracters are literal characters unless escaped with `\`
+  * `grep`, `vim` use BRE
+
+1. Extended regular expressions (ERE)
+  * Extra metacharacters: `( ) { } ? + |`
+  * `egrep`, `grep -E`, `less` use ERE
+
+### Alternation
+
+* To match a set of strings or other regular expressions
+
+  ```
+  # ERE
+  grep -Eh '^(bz|gz|zip)' ls*
+  
+  echo AAA | grep -E 'AAA|BBB'
+  echo BBB | grep -E 'AAA|BBB'
+  echo CCC | grep -E 'AAA|BBB'
+
+  # BRE
+  echo AAA | grep 'AAA\|BBB'
+  echo BBB | grep 'AAA\|BBB'
+  echo CCC | grep 'AAA\|BBB'
   ```
 
 ### Quantifiers
 
-#### `?` - Match an element zero or 1 time
-
-We want to match 2 forms: `(nnn) nnn-nnnn` and `nnn nnn-nnnn`, where "n" is a numberal. Regex would be `^\(?[0-9][0-9][0-9]\)? [0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]$`
-
+* `?` - Match an element 0 or 1 time
+* `*` - Match an element 0 or more times
+* `+` - Match and element 1 or more times   
+* `{}` - Match an element a specific number of times
+  
   ```
-  # "(555) 123-4567"
-  echo "(555) 123-4567" | grep -E '^\(?[0-9][0-9][0-9]\)? [0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]$'
-
-  # "555 123-4567"
-  echo "555 123-4567" | grep -E '^\(?[0-9][0-9][0-9]\)? [0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]$'
-
-  # Nothing
-  echo "AAA 123-4567" | grep -E '^\(?[0-9][0-9][0-9]\)? [0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]$'
+  {n}     Match the preceding element if it occurs exactly n times.
+  {n,m}   Match the preceding element if it occurs at least n times, but no more than m times.
+  {n,}    Match the preceding element if it occurs n or more times.
+  {,m}    Match the preceding element if it occurs no more than m times.
   ```
 
-#### `*` - Match an element 0 or more times
-
+  **Example 1**: Quatifier * 
+  
   ```
   # "This works."
-  echo "This works." | grep -E '[[:upper:]][[:upper:][:lower:] ]*\.'
+  echo "This works." | grep -E '[A-Z][A-Za-z ]*\.'
 
   # "This Works."
-  echo "This Works." | grep -E '[[:upper:]][[:upper:][:lower:] ]*\.'
+  echo "This Works." | grep -E '[A-Z][A-Za-z ]*\.'
 
   # Nothing
-  echo "this does not" | grep -E '[[:upper:]][[:upper:][:lower:] ]*\.'
+  echo "this does not" | grep -E '[A-Z][A-Za-z ]*\.'
   ```
 
-#### `+` - Match and element 1 or more times
-
+  **Example 2**: Quantifier ? +
   ```
   # "This that"
-  echo "This that" | grep -E '^([[:alpha:]]+ ?)+$'
+  echo "This that" | grep -E '^([A-Za-z]+ ?)+$'
 
   # "a b c"
-  echo "a b c" | grep -E '^([[:alpha:]]+ ?)+$'
+  echo "a b c" | grep -E '^([A-Za-z]+ ?)+$'
 
-  # Nothing b/c number 9
-  echo "a b 9" | grep -E '^([[:alpha:]]+ ?)+$'
+  # Nothing b/c of number 9
+  echo "a b 9" | grep -E '^([A-Za-z]+ ?)+$'
 
-  # Nothing b/c 2 spaces between c and d
-  echo "abc  d" | grep -E '^([[:alpha:]]+ ?)+$'
+  # Nothing b/c of 2 spaces between c and d
+  echo "abc  d" | grep -E '^([A-Za-z]+ ?)+$'
   ```
 
-#### `{}` - Match an element a specific number of times
-
-    {n}     Match the preceding element if it occurs exactly n times.
-    {n,m}   Match the preceding element if it occurs at least n times, but no more than m times.
-    {n,}    Match the preceding element if it occurs n or more times.
-    {,m}    Match the preceding element if it occurs no more than m times.
+  **Example 3**: Match 2 forms: `(nnn) nnn-nnnn` and `nnn-nnn-nnnn`, where "n" is a numberal. Regex might be `^\(?[0-9]{3}\)?-[0-9]{3}-[0-9]{4}$`
 
   ```
+  # QUANTIFIER: ? {}
   # "(555) 123-4567"
-  echo "(555) 123-4567" | grep -E '^\(?[0-9]{3}\)? [0-9]{3}-[0-9]{4}$'
+  echo "(555) 123-4567" | grep -E '^\(?[0-9]{3}\)?-[0-9]{3}-[0-9]{4}$'
 
-  # "555 123-4567"
-  echo "555 123-4567" | grep -E '^\(?[0-9]{3}\)? [0-9]{3}-[0-9]{4}$'
+  # "555-123-4567"
+  echo "555 123-4567" | grep -E '^\(?[0-9]{3}\)?-[0-9]{3}-[0-9]{4}$'
 
   # Nothing
-  echo "AAA 123-4567" | grep -E '^\(?[0-9]{3}\)? [0-9]{3}-[0-9]{4}$'
+  echo "AAA-123-4567" | grep -E '^\(?[0-9]{3}\)?-[0-9]{3}-[0-9]{4}$'
+
+  # Seem to work, but...
+  echo "(555-123-4567" | grep -E '^\(?[0-9]{3}\)?-[0-9]{3}-[0-9]{4}$'
+  echo "555)-123-4567" | grep -E '^\(?[0-9]{3}\)?-[0-9]{3}-[0-9]{4}$'
+  echo "(555)-123-4567" | grep -E '^\(?[0-9]{3}\)?-[0-9]{3}-[0-9]{4}$'
+
+  # Let's user alternation
+  echo "(555-123-4567" | grep -E '^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$'
+  echo "555)-123-4567" | grep -E '^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$'
+  echo "(555)-123-4567" | grep -E '^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$'
+  echo "555-123-4567" | grep -E '^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$'
+  echo "(555) 123-4567" | grep -E '^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$'
   ```
-
-### Putting regular expressions to work
-
-  ```
-  # Randomize phone list
-  for i in {1..10}; do echo "(${RANDOM:0:3}) ${RANDOM:0:3}-${RANDOM:0:4}" >> phonelist.txt; done
-  ```
-
-#### Searching for text with less
-
-
-#### Searching for text with vim

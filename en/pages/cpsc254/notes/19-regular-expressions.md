@@ -45,7 +45,7 @@
           Suppress the output of filenames for multi-file searches
   ```
 
-  **Examples**
+  **Example**
 
   ```
   # SETUP
@@ -82,9 +82,9 @@
 ## Metacharacters and Literals
 
 * **Literal charaters**: to specify characters in search string
-* **Metacharacters**: `^ $ . [ ] { } - ? * + ( ) | \` to specify more complex matches
+* **Metacharacters** `^ $ . [ ] { } - ? * + ( ) | \ `: to specify more complex matches
 
-#### Any Character
+### Any Character
 
 * To match any character: `.`
 
@@ -93,7 +93,7 @@
   grep -h '.zip' ls*
   ```
 
-#### Anchors
+### Anchors
 
 * To match at the beginning of the line: `^`
 * To match at the end of the line: `$`
@@ -177,7 +177,7 @@ POSIX splits into 2 kinds of regular expressions:
 
 1. Basic regular expressions (BRE)
   * Metacharacters: `^ $ . [ ] *`
-  * Extra ERE metachracters are literal characters unless escaped with `\`
+  * Extra ERE metachracters are literal characters unless escaped with `\ `
   * `grep`, `vim` use BRE
 
 1. Extended regular expressions (ERE)
@@ -262,7 +262,7 @@ POSIX splits into 2 kinds of regular expressions:
   echo "555)-123-4567" | grep -E '^\(?[0-9]{3}\)?-[0-9]{3}-[0-9]{4}$'
   echo "(555)-123-4567" | grep -E '^\(?[0-9]{3}\)?-[0-9]{3}-[0-9]{4}$'
 
-  # Let's user alternation
+  # Let's use alternation
   echo "(555-123-4567" | grep -E '^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$'
   echo "555)-123-4567" | grep -E '^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$'
   echo "(555)-123-4567" | grep -E '^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$'

@@ -2,5 +2,4 @@
 
 ## Teaching
 
-  * [CPSC 131](pages/cpsc131.md) - Fall 2014, Spring 2015
-  * [CPSC 254](pages/cpsc254.md) - Spring 2015
+* [CPSC 254](pages/cpsc-254.md) - Spring 2015, Fall 2015

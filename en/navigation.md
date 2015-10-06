@@ -11,7 +11,7 @@
   -- (Read: http://dynalon.github.io/mdwiki/#!customizing.md#Theme_chooser)
   -->
 
-[gimmick:theme](yeti)
+[gimmick:theme](cosmo)
 
 
 <!--
@@ -25,12 +25,10 @@
 
 [Teaching]()
 
-  * [CPSC 131](pages/cpsc131.md)
-  * [CPSC 254](pages/cpsc254.md)
+  * [CPSC 254](pages/cpsc-254.md)
 
 [Projects](pages/projects.md)
 
-[How-tos](pages/how-tos.md)
 
 <!-- A more complex navigation example: ----------------------------------------
 

@@ -1,5 +1,7 @@
 # Assignment 07 - Regular Expression
 
+## Description
+
 You can download the package for this assignment by issuing below command in the terminal:
 
 ```
@@ -7,9 +9,6 @@ wget -qO- http://j.mp/1LgRkti | tar zxf -
 ```
 
 The above command will download and uncompress the assignment package. You will see the "regex-exercise" folder in your current directory. In this folder, there is answer template file "assignment-07_123456789.md" and 9 other text files for testing your regular expressions in questions 1 - 9. For your answer template file, correct your CWID, and fill in your answers the following questions.
-
-
-## Description
 
 We want to find the regular expression to match all desired line, which starts with the word "match", and ignore those unwanted lines, which starts with the word "skip". The test files don't include the words "match" or "skip"; however, the result of your command should only display of the desired lines. We will use `grep -Ex [pattern] [file]` command to test our regular expressions, where `-E` is to interpret the pattern as an Extended Regular Expression, and `-x` is to match the whole line. You only need to write the patterns in your final text file.
 

@@ -1,0 +1,3 @@
+Mission: successful
+Last Mission: successful
+Mission: successful upon capture of target

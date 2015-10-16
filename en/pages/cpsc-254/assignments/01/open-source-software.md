@@ -1,4 +1,4 @@
-# Assignment 01
+# Assignment 01 - Open source software
 
 ## Description
 
